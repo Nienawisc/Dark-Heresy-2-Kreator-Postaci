@@ -1,0 +1,6 @@
+{
+  "name": "dark-heresy-2-pl",
+  "private": true,
+  "scripts": { "test": "node tests/creator.cjs" },
+  "devDependencies": { "playwright": "1.62.1" }
+}

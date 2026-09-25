@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Polski kreator postaci Dark Heresy 2. edycja — opcje z podręcznika głównego.">
+    <title> Dark Heresy 2 — kreator postaci </title>
+    <link rel="stylesheet" href="./interface.css">
+    <link rel="stylesheet" href="./DarkHeresy2edStyle.css">
+    <link rel="stylesheet" href="./vendor/w3.css">
+    <script src="./main.js"></script>
+    <script src="./cards.js"></script>
+    <script src="./vendor/jquery-3.3.1.min.js"></script>
+<script src="./pl-data.js"></script><script src="./localization.js"></script><script src="./core-fixes.js"></script><link rel="stylesheet" href="./polish.css?v=20260925-2"></head>
+
+<body>
+    <div class="w3-top">
+        <div class="w3-bar w3-dark-grey w3-card-4">
+            <a class="w3-bar-item w3-button" href="./index.html"> Dark Heresy 2 — kreator postaci </a>
+            <a class="w3-bar-item w3-right w3-button w3-pale-yellow" target="_blank" rel="noopener noreferrer" href="https://github.com/Nienawisc/Dark-Heresy-2-Kreator-Postaci#readme"> O projekcie i źródła </a>
+        </div>
+    </div>
+    <section style="padding-top: 50px;">
+        <section id="path">
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col l2 w3-center">
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col l8">
+                    <div class="w3-col l5">
+                        <div class="w3-card-2 w3-round-large w3-hover-sepia w3-ripple" onclick="navHome()">
+                            <div class="w3-center">
+                                <img src="images/happyGuard.png" class="w3-image w3-round-large" style="width: 100%">
+                            </div>
+                            <h4 class="w3-row-padding w3-center"> Stwórz postać </h4>
+                            <div class="w3-row-padding"> Stwórz Akolitę krok po kroku, korzystając z opcji z polskiego podręcznika głównego Dark Heresy, 2. edycja. <p></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-col l2 w3-center">
+                        <p style="color: #fff3cf"> </p>
+                    </div>
+                    <div class="w3-col l5">
+                        <div class="w3-card-2 w3-round-large w3-hover-sepia w3-ripple" onclick="document.getElementById('importModal').style.display='block'">
+                            <div class="w3-center">
+                                <img src="images/shocktroops.png" class="w3-image w3-round-large" style="width: 100%">
+                            </div>
+                            <h4 class="w3-row-padding w3-center"> Wczytaj postać </h4>
+                            <div class="w3-row-padding"> Wklej wcześniej wyeksportowany kod postaci lub otwórz postać zapisaną w tej przeglądarce. <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w3-col l2 w3-center">
+                    <p style="color: #fff3cf"> </p>
+                </div>
+            </div>
+            </section>
+
+        <!-- Homeworld Selection -->
+        <section id="homeSelect" style="display: none; opacity: 0;"></section>
+
+        <!-- Background Selection -->
+        <section id="backSelect" style="display: none; opacity: 0;"></section>
+
+        <!-- Role Selection -->
+        <section id="roleSelect" style="display: none; opacity: 0;"></section>
+
+        <!-- Characteristics -->
+        <section id="charRoll" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Określ cechy </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p></p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <br>
+                    <div class="w3-center" id="charBtnChoices">
+                        <p> Wylosuj wszystkie cechy naraz, wykonuj rzuty pojedynczo albo wpisz wyniki ręcznie, np. po rzucie własnymi kośćmi. </p>
+                        <button onclick="cardRollChars()" class="w3-button w3-round-large w3-yellow w3-center" id="btnCardRoll"> Wylosuj wszystkie cechy </button> <hr>
+                            <button onclick="cardManChars()" class="w3-button w3-round-large w3-light-grey w3-center" id="btnCharMan"> Wpisz cechy ręcznie </button> <hr>
+                            <button onclick="cardIndvChars()" class="w3-button w3-round-large w3-teal w3-center" id="btnCharIndv"> Losuj cechy pojedynczo </button>
+                    </div>
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Najniższy wynik to 22, a najwyższy 40. Zwykle wartość cechy wynosi 20+2k10. <br>
+                            <br> Kolor <span style="color: white; background: green;"> zielony </span> oznacza premię za Pochodzenie: rzuć 3k10 i odrzuć najniższy wynik. <br> Kolor <span style="color: white; background: red;"> czerwony </span> oznacza karę za Pochodzenie: rzuć 3k10 i odrzuć najwyższy wynik. <br>
+                            <br> Możesz raz powtórzyć rzut na jedną wybraną cechę. Musisz przyjąć nowy wynik. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    <br>
+                    <table style="font-size: 0.9em" class="charTable">
+                        <tr>
+                            <td class="charLbl" id="WSLbl"> Walka Wręcz </td>
+                            <td id="WS" class="rolled"></td>
+                            <td style="width: 20%"><input id="WSMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy WS">
+                            <button style="display: none;" id="WSIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="WSRollDice"></span></button>                            
+                            </td>                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="WSbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('WS')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Ataki w walce wręcz </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="BSLbl"> Umiejętności Strzeleckie </td>
+                            <td id="BS" class="rolled"></td>
+                            <td style="width: 20%"><input id="BSMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy BS">
+                            <button style="display: none;" id="BSIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="BSRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="BSbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('BS')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Ataki dystansowe, także bronią miotaną </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="SLbl"> Siła </td>
+                            <td id="S" class="rolled"></td>
+                            <td style="width: 20%"><input id="SMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy S">
+                            <button style="display: none;" id="SIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="SRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Sbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('S')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Testy siłowe; wpływa na udźwig i obrażenia w zwarciu </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="TLbl"> Wytrzymałość </td>
+                            <td id="T" class="rolled"></td>
+                            <td style="width: 20%"><input id="TMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy T">
+                            <button style="display: none;" id="TIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="TRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Tbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('T')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Odporność; wpływa na Zmęczenie i udźwig </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="AgLbl"> Zręczność </td>
+                            <td id="Ag" class="rolled"></td>
+                            <td style="width: 20%"><input id="AgMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy Ag">
+                            <button style="display: none;" id="AgIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="AgRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Agbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('Ag')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Testy sprawności i Inicjatywa </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="IntLbl"> Inteligencja </td>
+                            <td id="Int" class="rolled"></td>
+                            <td style="width: 20%"><input id="IntMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy Int">
+                            <button style="display: none;" id="IntIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="IntRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Intbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('Int')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Testy powiązanych umiejętności </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="PerLbl"> Percepcja </td>
+                            <td id="Per" class="rolled"></td>
+                            <td style="width: 20%"><input id="PerMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy Per">
+                            <button style="display: none;" id="PerIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="PerRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Perbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('Per')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Testy powiązanych umiejętności </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="WPLbl"> Siła Woli </td>
+                            <td id="WP" class="rolled"></td>
+                            <td style="width: 20%"><input id="WPMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy WP">
+                            <button style="display: none;" id="WPIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="WPRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="WPbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('WP')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Istotna dla psioników; odporność psychiczna i próg Zmęczenia </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="FelLbl"> Ogłada </td>
+                            <td id="Fel" class="rolled"></td>
+                            <td style="width: 20%"><input id="FelMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy Fel">
+                            <button style="display: none;" id="FelIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="FelRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Felbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('Fel')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Kontakty i relacje z innymi postaciami </td>
+                        </tr>
+                        <tr>
+                            <td class="charLbl" id="InflLbl"> Wpływ </td>
+                            <td id="Infl" class="rolled"></td>
+                            <td style="width: 20%"><input id="InflMan" type="number" class="charMan w3-input w3-round" style="display: none; width: 50%;" min="1" max="100" aria-label="Wartość cechy Infl">
+                            <button style="display: none;" id="InflIndvbtn" class="charIndv w3-button w3-round-large w3-teal"> Rzuć <span id="InflRollDice"></span></button></td>
+                            
+                            <td class="rerollTD"><button style="visibility: hidden" id="Inflbtn" class="reroll w3-button w3-round-large w3-light-grey" onclick="reRollChar('Infl')"> Powtórz rzut </button>
+                            </td>
+                            <td style="width: 100%;"> Pozyskiwanie wyposażenia; rozwija się zgodnie z decyzjami MG </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="manSetTD" style="display: none;"><button id="WSSet" onclick="setChars()" class="charManBtn w3-button w3-round-large w3-orange"> Zatwierdź </button></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <button id="btnCharNext" onclick="finishChars()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Aptitude Selection -->
+        <section id="aptSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Określ predyspozycje </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+                <div class="w3-col s12 m12 l4 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Predyspozycje określają koszt rozwijania cech, umiejętności i zdolności za Punkty Doświadczenia. <br>
+                            <br> Predyspozycje wynikają z Pochodzenia, Przeszłości i Roli. <br>
+                            <br> Jeśli dostępne są dwie możliwości, wybierz jedną. <br>
+                            <br> Powtarzającą się predyspozycję zastąp dowolną predyspozycją cechy, której jeszcze nie masz. <br>
+                            <br> Postać rozpoczyna z 8 różnymi predyspozycjami, w tym predyspozycją Ogólną. <br>
+                        </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l4 w3-card w3-round-large">
+                    
+                        <br>
+                    <table style="font-size: 0.9em" class="w3-table">
+                        <tbody id="aptsTable">
+                            <tr>
+                                <td id="aptTd_0"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_1"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_2"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_3"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_4"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_5"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_6"></td>
+                            </tr>
+                            <tr>
+                                <td id="aptTd_7"></td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <br>
+                    <button id="btnAptNext" onclick="finishApts()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Talent Selection -->
+        <section id="talentSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Wybierz początkowe zdolności </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Zdolności zapewniają postaci szczególne możliwości i korzyści. <br>
+                            <br> Ich koszt zależy od poziomu i posiadanych predyspozycji. <br>
+                            <br> Kolejne zdolności możesz wykupić za Punkty Doświadczenia podczas rozwoju postaci. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    
+                        <br>
+                    <table style="font-size: 0.9em" class="w3-table">
+                        <thead>
+                            <th> Zdolność </th>
+                            <th> Poziom </th>
+                            <th> Opis </th>
+                        </thead>
+                        <tbody id="talentTable">
+
+                        </tbody>
+                    </table>
+                    <br>
+                    <button id="btnTalNext" onclick="finishTalents()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Equipment Selection -->
+        <section id="equipSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Wybierz początkowy ekwipunek </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Ekwipunek obejmuje broń, pancerz, narzędzia i inne wyposażenie przydatne podczas służby Inkwizycji. <br>
+                            <br> Dodatkowy sprzęt można pozyskać dzięki Wpływowi lub zdobyć w trakcie przygód, za zgodą MG. <br>
+                            <br> Masa wyposażenia wlicza się do udźwigu, który zależy od premii z Siły i Wytrzymałości. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    
+                        <br>
+                    <table style="font-size: 0.9em" class="w3-table">
+                        <thead>
+                            <th> Zdolności związane z wyposażeniem </th>
+                        </thead>
+                        <tbody id="equipTalentTable">
+
+                        </tbody>
+                    </table>
+
+                    <hr>
+                    <table style="font-size: 0.9em" class="w3-table">
+                        <thead>
+                            <th> Ekwipunek </th>
+                            <th> Opis </th>
+                            <th> Masa </th>
+                        </thead>
+                        <tbody id="equipTable">
+
+                        </tbody>
+                    </table>
+                    <br>
+                    <button id="btnEquipNext" onclick="finishEquip()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Selection -->
+        <section id="skillSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Wybierz początkowe umiejętności </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Ekwipunek obejmuje broń, pancerz, narzędzia i inne wyposażenie przydatne podczas służby Inkwizycji. <br>
+                            <br> Dodatkowy sprzęt można pozyskać dzięki Wpływowi lub zdobyć w trakcie przygód, za zgodą MG. <br>
+                            <br> Masa wyposażenia wlicza się do udźwigu, który zależy od premii z Siły i Wytrzymałości. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    
+                        <br>
+                    <table style="font-size: 0.9em" class="w3-table">
+                        <thead>
+                            <th> Umiejętność </th>
+                            <th> Opis </th>
+                        </thead>
+                        <tbody id="skillTable">
+
+                        </tbody>
+                    </table>
+                    <br>
+                    <button id="btnSkillNext" onclick="finishSkills()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display: none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wounds and Fate Points -->
+        <section id="woundSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Określ Żywotność i Punkty Przeznaczenia </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Żywotność określa, ile obrażeń postać może otrzymać, zanim zacznie doznawać obrażeń krytycznych. <br>
+                            <br> Dodaj wynik rzutu 1k5 do podstawowej Żywotności wynikającej z Pochodzenia. <br>
+                            <br> Punkty Przeznaczenia odzwierciedlają łaskę Imperatora, szczęście lub wyjątkowe przeznaczenie bohatera. <br>
+                            <br> Punkty Przeznaczenia można wydawać na różne korzyści. Na początku sesji odnawiają się do ustalonego tutaj progu. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    
+                        <br>
+                    <h4> Żywotność </h4> Podstawowa Żywotność: <span class="rolled" id="baseWounds"></span>
+                    <br> (wynika z Pochodzenia) <br>
+                    <br>
+                    <button id="rollWounds" onclick="rollWounds()" class="w3-left w3-button w3-hover-sepia w3-round w3-red"> Rzuć 1k5 na dodatkową Żywotność </button>
+                    <br><br><br> Łączna Żywotność: <span class="rolled" id="totalWounds"></span>
+                    <br>
+                    <hr>
+                    <h4> Próg Punktów Przeznaczenia </h4> Podstawowy próg: <span class="rolled" id="baseFate"></span>
+                    <br> (wynika z Pochodzenia) <br>
+                    <br> Błogosławieństwo Imperatora: <span class="rolled" id="empBlessing"></span>
+                    <br> (taki wynik lub wyższy zwiększa próg o 1) <br>
+                    <br>
+                    <button id="rollFate" onclick="rollFate()" class="w3-left w3-button w3-hover-sepia w3-round w3-red"> Rzuć 1k10 </button>
+                    <br>
+                    <br>
+                    <br> Łączny próg: <span class="rolled" id="totalFate"></span>
+                    <br>
+                    <br>
+                    <button id="btnWoundNext" onclick="finishWounds()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divinations -->
+        <section id="divSelect" style="display: none; opacity: 0;">
+            <h3 class="w3-center"> Poznaj swoją wróżbę </h3>
+            <hr>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+                <div class="w3-col s12 m12 l3 w3-card w3-round-large infocard">
+                    <div class="w3-panel">
+                        <span style="font-size: 0.9em"> Wróżba odzwierciedla niezwykłe zrządzenia losu, które doprowadziły postać do służby Inkwizycji. <br>
+                            <br> Wykonaj rzut 1k100 w Tabeli 2-9: Wróżba (s. 84–85). <br>
+                            <br> Wróżba może zmienić cechy, umiejętności lub zdolności postaci. <br>
+                            <br> Kreator dodaje zdolność lub Unik przyznane przez wróżbę; jeśli postać już je znała, dodaje wskazaną premię +2 do cechy. Pozostałe efekty zastosuj zgodnie z opisem wróżby. </span>
+                    </div>
+                </div>
+                <div class="w3-col s12 m12 l5 w3-card w3-round-large">
+                    <br>
+                    <button id="rollDiv" onclick="rollDivination()" class="w3-left w3-button w3-hover-sepia w3-round w3-red"> Rzuć 1k100 </button>
+                    <br><br><br>
+                    <span class="rolled" id="divRoll"></span>
+                    <br>
+                    <hr>
+                    <h4> Wróżba: </h4>
+                    <span id="divName"></span>
+                    <br>
+                    <br>
+                    <br>
+                    <h4> Efekt: </h4>
+                    <span id="divText"></span>
+                    <div id="divinationChoice"></div>
+                    <p id="divinationChoiceError" class="error" role="alert"></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button id="btnDivNext" onclick="finishDiv()" class="w3-right w3-button w3-hover-sepia w3-round w3-yellow" style="display:none;"> Dalej </button>
+                    <br>
+                    <p style="color: #fff3cf"> </p>
+                </div>
+                <div class="w3-col s0 m0 l2">
+                    <p style="color: #fff3cf"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanceSelect" class="extra-step" style="display:none;opacity:0">
+          <div class="extra-panel">
+            <div id="advanceAptitudes" class="advance-aptitudes" aria-label="Aktualne predyspozycje"></div>
+            <h2>Rozwój postaci</h2>
+            <p>Możesz wydać do 1000 PD lub zachować je na później. Kolejne pola cech i umiejętności wykupuje się po kolei. Koszt zależy od posiadanych predyspozycji (s. 80–81).</p>
+            <p class="xp-counter">Pozostało: <strong id="xpRemaining">1000</strong> PD</p>
+            <p id="advanceError" role="alert" class="error"></p>
+            <div id="homeworldTalentChoice"></div>
+            <div id="startingSpecializations"></div>
+            <div id="eliteEffects"></div>
+            <h3>Cechy</h3>
+            <p>Każde pole dodaje +5. Wpływu nie można rozwijać za PD.</p>
+            <div id="advanceStats" class="advance-grid"></div>
+            <h3>Umiejętności</h3>
+            <p>Podstawowy → Przeszkolony → Doświadczony → Weteran. Umiejętności wymagające specjalizacji są kupowane oddzielnie.</p>
+            <div class="add-skill"><label for="advanceSkillChoice">Nowa umiejętność</label><select id="advanceSkillChoice" class="w3-select w3-border"></select><label for="advanceSkillSpecialization">Specjalizacja (jeśli wymagana)</label><input id="advanceSkillSpecialization" class="w3-input w3-border" maxlength="80"><button type="button" onclick="addAdvancementSkill()" class="w3-button w3-green w3-round">Dodaj</button></div>
+            <div id="advanceSkills" class="advance-grid"></div>
+            <h3>Zdolności</h3>
+            <p>Lista dostępnych zdolności z podręcznika. Wymagania i koszt są sprawdzane przed zakupem.</p>
+            <div id="advanceTalents" class="talent-list"></div>
+            <details class="custom-talent"><summary>Inna zdolność z podręcznika głównego</summary>
+              <p>Przepisz poziom i predyspozycje z tabeli 4-1, 4-2 lub 4-3. Kreator policzy koszt; wymagania konkretnej zdolności sprawdź w jej opisie. Ten formularz nie służy do kupowania mocy psionicznych.</p>
+              <label for="customTalentName">Nazwa zdolności</label><input id="customTalentName" class="w3-input w3-border" maxlength="100">
+              <label for="customTalentTier">Poziom</label><select id="customTalentTier" class="w3-select w3-border"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+              <label for="customTalentApt1">Predyspozycja 1</label><select id="customTalentApt1" class="w3-select w3-border"></select>
+              <label for="customTalentApt2">Predyspozycja 2 (jeśli podana)</label><select id="customTalentApt2" class="w3-select w3-border"></select>
+              <label><input id="customTalentPrereq" type="checkbox"> Potwierdzam, że postać spełnia wymagania zdolności podane w podręczniku.</label>
+              <p id="customTalentCost" aria-live="polite"></p>
+              <label class="custom-talent-purchase"><input id="customTalentPurchase" type="checkbox" onchange="addCustomTalent()"> Wykup tę zdolność</label>
+              <div id="customTalentBought"></div>
+            </details>
+            <div class="step-actions"><button type="button" onclick="skipAdvancement()" class="w3-button w3-light-grey w3-round">Pomiń rozwój</button><button type="button" onclick="finishAdvancement()" class="w3-button w3-yellow w3-round">Dalej do wyposażenia</button></div>
+            <div id="advanceCostTables" class="advance-cost-tables"></div>
+          </div>
+        </section>
+
+        <section id="armorySelect" class="extra-step" style="display:none;opacity:0">
+          <div class="extra-panel">
+            <h2>Dodatkowe wyposażenie</h2>
+            <p>Z podręcznikowej Zbrojowni możesz wybrać tyle przedmiotów, ile wynosi premia z Wpływu. Każdy musi mieć dostępność Niezwykłą (–10) lub wyższą po uwzględnieniu premii przeszłości (s. 81). Każda wybrana broń ma dwa magazynki standardowej amunicji. Niedostępne pozycje pozostają widoczne do porównania.</p>
+            <p id="gearBonus" class="armory-bonus" aria-live="polite"></p>
+            <p class="xp-counter">Wybrano: <strong id="gearCount">0</strong> / <strong id="gearLimit">0</strong></p>
+            <p id="gearError" role="alert" class="error"></p>
+            <label for="armoryCategory">Kategoria</label><select id="armoryCategory" class="w3-select w3-border" onchange="renderArmory()"><option value="">Wszystkie</option><option>broń</option><option>pancerz</option><option>sprzęt</option><option>narzędzia</option><option>używki</option><option>modyfikacja</option><option>amunicja</option><option>cybernetyka</option></select>
+            <p id="gearCyberHelp" hidden>Dostępność w tabeli 5-21 dotyczy zwykłej jakości; mechadendryty traktuje się jak wszczepy dobrej jakości. Opis pięciu odmian mechadendrytu znajduje się na s. 183. Wybierz ustaloną odmianę lub pozycję ogólną z tabeli.</p>
+            <label for="armoryItem">Przedmiot</label><select id="armoryItem" class="w3-select w3-border"></select>
+            <button type="button" onclick="addArmoryItem()" class="w3-button w3-green w3-round">Dodaj przedmiot</button>
+            <details class="custom-armory"><summary>Inny przedmiot z podręcznika głównego</summary>
+              <p>Jeśli pozycji nie ma w katalogu, przepisz jej nazwę, dostępność i obciążenie z tabeli Zbrojowni. Dodatki nie należą do tego wyboru.</p>
+              <label for="customGearName">Nazwa</label><input id="customGearName" class="w3-input w3-border" maxlength="100">
+              <label for="customGearCategory">Kategoria</label><select id="customGearCategory" class="w3-select w3-border"><option>broń</option><option>pancerz</option><option>sprzęt</option><option>narzędzia</option><option>używki</option><option>modyfikacja</option><option>amunicja</option><option>cybernetyka</option></select>
+              <label for="customGearAvailability">Dostępność z podręcznika</label><select id="customGearAvailability" class="w3-select w3-border"><option>Niezwykłe</option><option>Średnio Dostępne</option><option>Powszechne</option><option>Liczne</option><option>Pospolite</option><option>Wszechobecne</option><option>Rzadkie</option><option>Niespotykane</option><option>Wyjątkowe</option><option>Niemal Unikalne</option><option>Unikalne</option></select>
+              <label for="customGearWeight">Obciążenie w kg (0, jeśli tabela podaje „–”)</label><input id="customGearWeight" class="w3-input w3-border" type="number" min="0" max="1000" step="0.1" value="0">
+              <button type="button" onclick="addCustomArmoryItem()" class="w3-button w3-green w3-round">Dodaj z podręcznika</button>
+            </details>
+            <ul id="armoryChosen"></ul>
+            <div class="step-actions"><button type="button" onclick="backToAdvancement()" class="w3-button w3-light-grey w3-round">Wróć do rozwoju</button><button type="button" onclick="finishArmory()" class="w3-button w3-yellow w3-round">Zobacz kartę postaci</button></div>
+          </div>
+        </section>
+
+        <!-- Character Sheet -->
+        <section id="charSheet" style="display: none; opacity: 0;">
+                <h3 class="w3-center"> Twoja postać </h3>
+                    <hr>
+
+            <div class="w3-row-padding">
+                <div class="w3-col s0 m0 l2"> </div>
+                <div class="w3-col s12 m12 l8 charsheet w3-round-large">
+                        <div class="w3-row-padding w3-section sheet-wrapper">
+                            <div class="w3-quarter w3-center" style="padding-top: 25px;">
+                                <img src="images/charsheet_logo.png">
+                            </div>
+                            <div class="w3-half">
+                                <br>
+                                <div class="sheet-row">
+                                    <div class="sheet-item" style="width: 10%"></div>
+                                    <div class="sheet-item" style="width:30%"><label> Pochodzenie </label></div>
+                                    <div class="sheet-item" style="width:55%">
+                                        <span disabled class="underline" id="attr_Homeworld" type="text"></span>
+                                    </div>
+                                </div>
+                                <div class="sheet-row">
+                                        <div class="sheet-item" style="width: 10%"></div>
+                                    <div class="sheet-item" style="width:30%"><label> Przeszłość </label></div>
+                                    <div class="sheet-item" style="width:55%"><span disabled class="underline" id="attr_Background" type="text"></span>
+                                    </div>
+                                </div>
+                                <div class="sheet-row">
+                                        <div class="sheet-item" style="width: 10%"></div>
+                                    <div class="sheet-item" style="width:30%"><label> Rola </label></div>
+                                    <div class="sheet-item" style="width:55%"><span disabled class="underline" id="attr_Role" type="text"></span>
+                                    </div>
+                                </div>
+                                <div class="sheet-row">
+                                        <div class="sheet-item" style="width: 10%"></div>
+                                    <div class="sheet-item" style="width:30%"><label> Wróżba </label></div>
+                                    <div class="sheet-item" style="width:55%"><span disabled class="underline" id="attr_Divination" type="text"></span>
+                                    </div>
+                                </div>
+        
+                            </div>
+                            <div class="w3-quarter w3-center">
+                                <div style="padding-top: 25px;">
+                                        <button class="w3-button w3-round w3-yellow" onclick="document.getElementById('saveModal').style.display='block'"> Eksport / zapis </button>
+                            </div>
+                            </div>
+                        </div>
+                        <hr style="border-top: 1px solid maroon;">
+                        <!-- End Tab setup -->
+                        <div class="w3-row-padding w3-section">
+        
+                            <!-- Core Tab -->
+                            <div class="sheet-wrapper">
+        
+                                <!-- First Part = Characteristics\Experience&Fate\Insanity&Corruption\Skills -->
+                                <!--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
+                                <hr class="sheet-dhhr">
+                                <div class="w3-row-padding w3-section">
+                                    <!-- Left Side -->
+                                    <div class="w3-half">
+                                        <div class="sheet-characteristics">
+                                            <h3> Cechy </h3>
+                                            <div class="w3-row-padding">
+        
+                                                <!-- Left Column (Characteristics) -->
+                                                <div class="w3-half">
+        
+                                                    <!-- WeaponSkill (WS) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_WS" type="roll" style="text-align: center;" value="/em rolls Weapon Skill: [[1d100]] Target: [[@{WeaponSkill}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Walka Wręcz (WW) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_WS" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+                                                    <!-- BallisticSkill (BS) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_BS" type="roll" style="text-align: center;" value="/em rolls Ballistic Skill: [[1d100]] Target: [[@{BallisticSkill}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Umiejętności Strzeleckie (US) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_BS" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Strength (S) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_S" type="roll" style="text-align: center;" value="/em rolls Strength: [[1d100]] Target: [[@{Strength}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Siła (S) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_S" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Toughness (T) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_T" type="roll" style="text-align: center;" value="/em rolls Toughness: [[1d100]] Target: [[@{Toughness}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Wytrzymałość (Wt) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_T" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Agility (Ag) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_Ag" type="roll" style="text-align: center;" value="/em rolls Agility: [[1d100]] Target: [[@{Agility}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Zręczność (Zr) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_Ag" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+        
+                                                <!-- Characteristics (Right Column) -->
+                                                <div class="w3-half">
+        
+                                                    <!-- Intelligence (Int) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_Int" type="roll" style="text-align: center;" value="/em rolls Intelligence: [[1d100]] Target: [[@{Intelligence}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Inteligencja (Int) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_Int" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Perception (Per) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_Per" type="roll" style="text-align: center;" value="/em rolls Perception: [[1d100]] Target: [[@{Perception}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Percepcja (Per) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_Per" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Willpower (WP) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_WP" type="roll" style="text-align: center;" value="/em rolls Willpower: [[1d100]] Target: [[@{Willpower}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Siła Woli (SW) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_WP" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Fellowship (Fel) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_Fel" type="roll" style="text-align: center;" value="/em rolls Fellowship: [[1d100]] Target: [[@{Fellowship}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Ogłada (Ogd) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_Fel" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+        
+                                                    <!-- Influence (Ifl) -->
+                                                    <div class="w3-row-padding">
+                                                        <div class="w3-half">
+                                                            <div name="roll_Inf" type="roll" style="text-align: center;" value="/em rolls Influence: [[1d100]] Target: [[@{Influence}+ ?{Modifier|0}]].">
+                                                                <label style="font-size: 1.25em; vertical-align: middle;"> Wpływ (Wp) </label></div>
+                                                        </div>
+                                                        <div class="w3-half">
+                                                            <div class="sheet-unnatural_box">
+                                                                <input disabled id="attr_Infl" type="text" value="0">
+        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br> <!-- break between Characteristics and Unnaturals -->
+                                        <hr class="sheet-dhhr">
+                                        <div class="w3-row-padding">
+                                            <div class="w3-half">
+                                                <h3> Żywotność </h3>
+                                                <div class="w3-row">
+                                                    <div class="w3-center">
+                                                        <h3 id="attr_Wounds_max" type="number" style="text-align: center;"></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="w3-half">
+                                                <h3> Próg Punktów Przeznaczenia </h3>
+                                                <div class="w3-row">
+                                                    <div class="w3-center">
+                                                        <h3 id="attr_Fate_max" type="number" style="text-align: center;"></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="w3-row-padding">
+                                            <div class="w3-half">
+                                                <h3> Ruch </h3>
+                                                <div class="">
+                                                <div class="w3-row">
+                                                    <div class="w3-half"><label> Ruch częściowy: </label><span style="vertical-align: middle;" id="halfMove"></span></div>
+                                                    <div class="w3-half"><label> Ruch pełny: </label><span style="vertical-align: middle;" id="fullMove"></span></div>
+                                                </div>
+                                                <div class="w3-row">
+                                                        <div class="w3-row">
+                                                                <div class="w3-half"><label> Szarża: </label><span style="vertical-align: middle;" id="charge"></span></div>
+                                                                <div class="w3-half"><label> Bieg: </label><span style="vertical-align: middle;" id="run"></span></div>
+                                                            </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="w3-half">
+                                                <div class="sheet-row">
+                                                    <h3> Próg Zmęczenia </h3>
+                                                    <div class="w3-center "><h3 id="attr_FatigueThreshold" type="number" style="text-align: center;"></h3></div>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                    </div>
+        
+                                    <!-- Right Side -->
+                                    <div class="w3-half">
+        
+                                        <!-- Right Column (Skills) -->
+                                        <h3> Umiejętności </h3>
+                                        <p class="skill-level-legend">Poziomy: 1 Podstawowy · 2 Przeszkolony · 3 Doświadczony · 4 Weteran</p>
+                                        <div class="w3-row" id="defaultSkill" style="display:none;">
+                                            <div class="sheet-item w3-center underline" style="width:100%">
+                                                <span class="skillDetail"></span>
+                                            </div>
+                                        </div>
+        
+                                        <br><!-- Break between Skills and Talents -->
+                                        <hr class="sheet-dhhr">
+                                        <h3> Zdolności </h3>
+                                        <div class="w3-row" id="defaultTalent" style="display:none;">
+                                            <div class="sheet-item w3-center underline" style="width:100%">
+                                                <span class="talentDetail"></span>
+                                            </div>
+                                        </div>
+        
+                                        <br><!-- Break between Talents and Aptitudes -->
+                                        <hr class="sheet-dhhr">
+                                        <h3> Predyspozycje </h3>
+                                        <div class="w3-row" id="aptitudeContainer">
+                                            <div class="w3-row">
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude0"></span>
+                                                </div>
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude1"></span>
+                                                </div>
+                                            </div>
+                                            <div class="w3-row">
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude2"></span>
+                                                </div>
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude3"></span>
+                                                </div>
+                                            </div>
+                                            <div class="w3-row">
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude4"></span>
+                                                </div>
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude5"></span>
+                                                </div>
+                                            </div>
+                                            <div class="w3-row">
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude6"></span>
+                                                </div>
+                                                <div class="w3-half">
+                                                    <span class="sheet-item w3-center underline" id="aptitude7"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                                <div class="w3-row-padding">
+                                    <hr class="sheet-dhhr">
+                                    <h3> Premie </h3>
+                                    <div class="w3-half">
+                                        <label> Premia za Pochodzenie: </label>
+                                        <div class="w3-row">
+                                            <span id="homeBonus"></span>
+                                        </div>
+                                    </div>
+                                    <div class="w3-half">
+                                        <label> Premia za Przeszłość: </label>
+                                        <div class="w3-row">
+                                            <span id="backBonus"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="w3-row-padding">
+                                    <div class="w3-half">
+                                        <label> Premia za Rolę: </label>
+                                            <div class="w3-row">
+                                                <span id="roleBonus"></span>
+                                            </div>
+                                        </div>
+                                        <div class="w3-half">
+                                            <label> Wróżba: </label>
+                                            <div class="w3-row">
+                                                <span id="divBonus"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div id="eliteStartingBonuses" class="elite-sheet-panel" hidden></div>
+                                
+                                <br> 
+                            </div>
+        
+                        </div>
+        
+                        <hr style="border-top: 1px solid maroon;">
+                        <div class="sheet-section-gear" style="display: block;">
+                            <!-- Gear Tab -->
+                            <!--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
+                            <div class="sheet-wrapper">
+                                <div class="w3-row-padding w3-section">
+                                    <!-- Left Side -->
+                                    <div class="w3-half">
+                                        <h3> Broń dystansowa </h3>
+                                        <div class="repeating_Rangedweapons">
+                                            <div id="defaultRangedWeapon" class="sheet-quickborder w3-round-large" style="display:none;">
+                                                <div class="w3-row underline">
+                                                    <div class="w3-col l2">
+                                                        <label> Nazwa: </label>
+                                                    </div>
+                                                    <div class="w3-col l6">
+                                                        <span class="weaponDetail weaponName "></span>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <label> Klasa: </label>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <span class="weaponDetail weaponClass "></span>
+                                                    </div>
+                                                </div>
+                                                <div class="w3-row underline">
+                                                    <div class="w3-col l2">
+                                                        <label> Zasięg: </label></div>
+                                                    <div class="w3-col l1 "><span class="weaponDetail weaponRange"></span>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <label> Obrażenia: </label></div>
+                                                    <div class="w3-col l2 "><span class="weaponDetail weaponDamage"></span>
+                                                    </div>
+                                                    <div class="w3-col l1">
+                                                        <label> Typ: </label></div>
+                                                    <div class="w3-col l2 "><span class="weaponDetail weaponType"></span></div>
+                                                    <div class="w3-col l1">
+                                                        <label> Penetracja: </label></div>
+                                                    <div class="w3-col l1 "><span class="weaponDetail weaponPen"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="w3-row underline">
+                                                    <div class="w3-col l2">
+                                                        <label> Szybkostrzelność: </label>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <span class="weaponDetail weaponRoF"></span>
+                                                    </div>
+                                                    <div class="w3-col l1">
+                                                        <label> Magazynek: </label>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <span class="weaponDetail weaponClip"></span>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <label> Przeładowanie: </label>
+                                                    </div>
+                                                    <div class="w3-col l2">
+                                                        <span class="weaponDetail weaponReload"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="w3-row underline">
+                                                    <div class="w3-col l2">
+                                                        <label> Cechy specjalne: </label></div>
+                                                    <div class="w3-rest "><span class="weaponDetail weaponSpecial"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Break between Ranged and Melee -->
+                                        <h3> Broń do walki wręcz </h3>
+                                        <table>
+                                            <div id="charMelee">
+                                                <div class="repeating_meleeweapons">
+                                                    <div id="defaultMeleeWeapon" class="sheet-quickborder w3-round-large" style="display:none;">
+                                                        <div class="w3-row underline">
+                                                            <div class="w3-col l2">
+                                                                <label> Nazwa: </label>
+                                                            </div>
+                                                            <div class="w3-col l6">
+        
+                                                                <span class="weaponDetail weaponName "></span>
+                                                            </div>
+                                                            <div class="w3-col l2">
+                                                                <label> Klasa: </label>
+                                                            </div>
+                                                            <div class="w3-col l2">
+                                                                <span class="weaponDetail weaponClass "></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="w3-row underline">
+                                                            <div class="w3-col l2">
+                                                                <label> Obrażenia: </label></div>
+                                                            <div class="w3-col l2 "><span class="weaponDetail weaponDamage"></span></div>
+                                                            <div class="w3-col l2">
+                                                                <label> Typ: </label></div>
+                                                            <div class="w3-col l2 "><span class="weaponDetail weaponType"></span></div>
+                                                            <div class="w3-col l2">
+                                                                <label> Penetracja: </label></div>
+                                                            <div class="w3-col l2 "><span class="weaponDetail weaponPen"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="w3-row underline">
+                                                            <div class="w3-col l2">
+                                                                <label> Cechy specjalne: </label></div>
+                                                            <div class="w3-rest "><span class="weaponDetail weaponSpecial"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </table>
+        
+                                    </div>
+                                    <!-- Right Side -->
+                                    <div class="w3-half">
+                                        <h3> Cybernetyka </h3>
+                                        <div>
+                                            <div class="repeating_Cybernetics sheet-quickborder w3-round-large" style="display:none;">
+                                                <div class="sheet-item" style="width:100%">
+                                                    <span id="attr_Cybernetics" type="text" class="underline"></span>
+                                                </div>
+                                            </div>
+                                            <div id="additionalCybernetics" class="sheet-quickborder w3-round-large"></div>
+                                        </div>
+                                        <h3> Wyposażenie </h3>
+                                        <p class="w3-center"> Limit dodatkowych przedmiotów z premii z Wpływu: <strong id="inflGear"></strong>. Wybrane przedmioty znajdują się poniżej. </p>
+                                        <div class="sheet-quickborder w3-round-large">
+                                            <div class="sheet-row">
+                                                <div class="sheet-item" style="width:42%">
+                                                    <label> Suma premii z S i Wt: </label>
+                                                </div>
+                                                <span id="attr_baseCarry"></span>
+                                            </div>
+                                            <div class="sheet-row">
+                                                <div class="sheet-item" style="width:10%">
+                                                    <label> Udźwig: </label>
+                                                </div>
+                                                <div class="sheet-item" style="width:15%">
+                                                    <span disabled id="attr_GearCarryMax"></span> kg
+                                                </div>
+                                                <div class="sheet-item" style="width:17%">
+                                                    <label> Pozostało: </label>
+                                                </div>
+                                                <div class="sheet-item" style="width:15%">
+                                                    <span id="attr_GearCarryAvailable"></span> kg
+                                                </div>
+                                                <div class="sheet-item" style="width:1%">
+                                                </div>
+                                                <div class="sheet-item" style="width:15%">
+                                                    <label> Niesione: </label>
+                                                </div>
+                                                <div class="sheet-item" style="width:15%">
+                                                    <span id="attr_GearCarryCurrent" type="text"></span> kg
+                                                </div>
+                                            </div>
+                                            <hr class="sheet-dhhr">
+                                            <div class="repeating_Gears">
+                                                <div id="defaultGear" style="display: none;" class="underline">
+                                                    <div class="sheet-item" style="width:90%">
+                                                        <span class="gearDetail gearName"></span>
+                                                    </div>
+                                                    <div class="sheet-item" style="width:10%">
+                                                        <span class="gearDetail gearWt"></span> kg
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                <div class="w3-col s0 m0 l2"> </div>
+            </div>
+        </section>
+
+    </section><div id="importModal" class="w3-modal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+ <div class="w3-modal-content w3-round-large modal-content">
+  <button type="button" class="w3-button w3-display-topright" aria-label="Zamknij" onclick="document.getElementById('importModal').style.display='none'">×</button>
+  <h2 id="importTitle">Wczytaj postać</h2>
+  <label for="importInput">Kod wyeksportowanej postaci</label>
+  <textarea id="importInput" class="w3-input w3-border w3-round" rows="4"></textarea>
+  <p id="noString" role="alert" class="error" hidden></p>
+  <button class="w3-button w3-green w3-round" onclick="importChar()">Wczytaj kod</button>
+  <hr><h3>Postacie w tej przeglądarce</h3>
+  <button class="w3-button w3-round w3-light-grey" onclick="retrieveChar()">Pokaż zapisane postacie</button>
+  <label for="charList" class="sr-only">Zapisana postać</label><select id="charList" class="w3-select w3-border" hidden></select>
+  <button id="charLoad" class="w3-button w3-green w3-round" onclick="chooseChar()" hidden>Wczytaj wybraną</button>
+  <p id="loadStatus" role="status"></p>
+ </div>
+</div>
+<div id="saveModal" class="w3-modal" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
+ <div class="w3-modal-content w3-round-large modal-content">
+  <button type="button" class="w3-button w3-display-topright" aria-label="Zamknij" onclick="document.getElementById('saveModal').style.display='none'">×</button>
+  <h2 id="saveTitle">Zapisz postać</h2>
+  <label for="saveCharName">Imię postaci</label><input id="saveCharName" class="w3-input w3-border w3-round" maxlength="120">
+  <p>Postać zostanie zapisana w tej przeglądarce. Zachowaj też kod, aby przenieść ją na inny komputer lub odtworzyć po wyczyszczeniu danych przeglądarki.</p>
+  <button class="w3-button w3-green w3-round" onclick="saveLocalCharacter()">Zapisz w przeglądarce</button>
+  <p id="saveStatus" role="status"></p><hr>
+  <label for="exportText">Kod postaci</label><textarea id="exportText" class="w3-input w3-border w3-round" rows="4" readonly></textarea>
+  <button class="w3-button w3-green w3-round" onclick="exportChar()">Wygeneruj kod</button>
+ </div>
+</div>
+<footer class="w3-center app-footer">Polska adaptacja: Ten Zły · Na podstawie <a href="https://github.com/ajott/ajott.github.io/tree/master/dh2chargen" target="_blank" rel="noopener noreferrer">kreatora ajott</a></footer>
+</body>
+
+
+<script src="./advancement-data.js"></script><script src="./advancement.js?v=20260925-2"></script>
+<script src="./saveChars.js"></script>
+</html>

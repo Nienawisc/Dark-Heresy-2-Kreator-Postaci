@@ -1,0 +1,132 @@
+body { color: #241f1a; }
+.core-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; max-width: 1040px; margin: 24px auto 60px; padding: 0 20px; }
+.core-card { overflow: hidden; background: #fff3cf; display: flex; flex-direction: column; }
+.core-card > img { width: 100%; height: 230px; object-fit: cover; }
+.core-card-content { padding: 8px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+.core-card-content hr { margin: 10px 0; border-color: #cbb98c; }
+.core-card-content button { margin-top: auto; white-space: normal; }
+.source-page, .app-footer { color: #66563f; font-size: .88rem; }
+.modal-content { position: relative; padding: 28px; background: #fff3cf; width: min(640px, 94vw); }
+.modal-content button { margin-top: 14px; }
+.modal-content select { margin-top: 16px; }
+.error { color: #9b2020; }
+.app-footer { margin: 30px 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.print-button { display: block; margin: 10px auto 24px; }
+.extra-panel { max-width: 1100px; margin: 30px auto 60px; padding: 24px; background: #fff3cf; border-radius: 12px; }
+.extra-panel h2 { text-align: center; }
+.advance-aptitudes { position: sticky; top: 34px; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 5px 7px; padding: 10px 12px; background: #ead8a9; border: 1px solid #bda56d; border-radius: 8px; box-shadow: 0 3px 8px #34271026; }
+.advance-aptitudes strong { margin-right: 6px; }
+.aptitude-badge { padding: 3px 8px; background: #fff9e9; border: 1px solid #c5b88f; border-radius: 99px; font-size: .84rem; transition: background-color .12s, color .12s; }
+.aptitude-badge.is-matched { background: #167b43; color: white; border-color: #145e35; }
+.xp-counter { font-size: 1.2rem; padding: 10px; background: #ead8a9; border-radius: 8px; }
+.elite-choices, .advance-boxes, .step-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.elite-choices label, .advance-boxes label, .talent-option { display: inline-flex; align-items: center; gap: 5px; }
+.elite-choices label { padding: 8px 12px; background: #f5e4bc; border-radius: 6px; }
+.advance-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.advance-row { padding: 10px; border: 1px solid #c7b58c; border-radius: 6px; background: #fff9e9; }
+.advance-row strong { display: block; margin-bottom: 7px; }
+.advance-boxes label { font-size: .82rem; }
+.advance-boxes input, .talent-option input, .elite-choices input { accent-color: #855c13; width: 17px; height: 17px; }
+.add-skill { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px 12px; align-items: end; margin-bottom: 15px; }
+.add-skill label { grid-row: 1; }
+.add-skill select, .add-skill input, .add-skill button { grid-row: 2; }
+.talent-list { display: grid; gap: 18px; }
+.talent-tier { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px 18px; }
+.talent-tier h4 { grid-column: 1 / -1; margin: 5px 0; padding-bottom: 5px; border-bottom: 2px solid #a88144; }
+.talent-option { display: flex; flex-wrap: wrap; padding: 7px; border-bottom: 1px solid #d7c69c; font-size: .9rem; }
+.talent-tier > label.talent-option { display: grid; grid-template-columns: 18px minmax(0,1fr); align-items: start; gap: 7px; }
+.talent-option > label { display: grid; grid-template-columns: 18px minmax(0,1fr); align-items: start; gap: 7px; width: 100%; }
+.specialized-talent { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.specialized-talent > span { flex: 0 0 100%; }
+.specialized-talent > input { min-width: 0; width: min(190px,100%); }
+.advance-cost-tables { margin-top: 28px; padding-top: 12px; border-top: 2px solid #bda56d; }
+.advance-cost-table { overflow-x: auto; margin-bottom: 20px; }
+.advance-cost-table h4 { margin: 10px 0 4px; }
+.advance-cost-table table { width: 100%; min-width: 570px; background: #fff9e9; font-size: .85rem; }
+.advance-cost-table th, .advance-cost-table td { text-align: center; white-space: nowrap; }
+.custom-talent-purchase input, #customTalentBought input { accent-color: #855c13; width: 17px; height: 17px; }
+.step-actions { justify-content: space-between; margin-top: 22px; }
+#armoryChosen li { margin: 5px 0; }
+.custom-armory, .custom-talent { margin-top: 18px; padding: 12px; border: 1px solid #c7b58c; border-radius: 6px; }
+.custom-armory summary, .custom-talent summary { cursor: pointer; font-weight: bold; }
+.custom-armory label, .custom-talent label { display: block; margin-top: 10px; }
+.sheet-advance-boxes { display: inline-flex; gap: 1px; flex-wrap: wrap; margin-left: 5px; }
+.sheet-advance-boxes label { display: inline-flex; align-items: center; gap: 1px; font-size: .62rem; }
+.sheet-advance-boxes input { width: 12px; height: 12px; margin: 0; accent-color: #5e4b25; }
+#charSheet .sheet-characteristics > .w3-row-padding > .w3-half > .w3-row-padding { display: grid; grid-template-columns: minmax(130px,1fr) minmax(170px,1.5fr); align-items: center; gap: 4px; margin: 3px 0; }
+#charSheet .sheet-characteristics > .w3-row-padding > .w3-half { width: 100%; float: none; }
+#charSheet .sheet-characteristics > .w3-row-padding > .w3-half > .w3-row-padding::before,
+#charSheet .sheet-characteristics > .w3-row-padding > .w3-half > .w3-row-padding::after { display: none; }
+#charSheet .sheet-characteristics > .w3-row-padding > .w3-half > .w3-row-padding > .w3-half { width: auto; float: none; min-width: 0; }
+#charSheet .sheet-characteristics .sheet-unnatural_box { display: flex; width: 100%; margin: 0 !important; align-items: center; gap: 5px; }
+#charSheet .sheet-characteristics .sheet-unnatural_box > input { width: 48px; min-width: 48px; height: 40px; flex: 0 0 48px; margin: 0; font-size: 1.5em; }
+#charSheet .sheet-characteristics .sheet-advance-boxes { margin-left: 0; flex-wrap: nowrap; }
+#charSheet .sheet-characteristics .sheet-advance-boxes label { display: inline-flex; width: auto !important; min-width: 0; height: auto; flex: 0 0 auto; }
+#charSheet .sheet-characteristics .sheet-advance-boxes input { display: inline-block; width: 12px; height: 12px; margin: 0; }
+#charSheet .skillDetail { display: grid; grid-template-columns: minmax(0, 1fr) max-content; align-items: center; gap: 5px; width: 100%; text-align: left; }
+#charSheet .skillDetail > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+#charSheet .skillDetail .sheet-advance-boxes { display: inline-flex; flex-flow: row nowrap; justify-self: end; margin-left: 0; white-space: nowrap; }
+#charSheet .skillDetail .sheet-advance-boxes label { display: inline-flex; width: auto !important; min-width: 0; height: auto; line-height: normal; flex: 0 0 auto; }
+#charSheet .talentDetail { display: block; text-align: center; }
+#charSheet .skill-level-legend { font-size: .76rem; line-height: 1.35; margin: 2px 0 9px; }
+.advancement-summary { padding: 6px 12px; background: #eee1ba; border: 1px solid #bdae82; border-radius: 6px; }
+.advancement-summary p { margin: 6px 0; }
+.elite-sheet-panel { clear: both; margin: 18px 12px 4px; padding: 12px 16px; border: 1px solid #c4af7c; border-radius: 6px; background: #fff7e4; }
+.elite-sheet-panel h4 { margin: 0 0 8px; font-size: 1.1rem; font-weight: bold; }
+.elite-sheet-panel p { margin: 4px 0; }
+#additionalGearRows p, #advancedTalentRows p { margin: 4px 0; border-bottom: 1px solid #d6c8a3; }
+#additionalCybernetics:empty { display: none; }
+#additionalCybernetics p { margin: 4px 0; border-bottom: 1px solid #d6c8a3; }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid #006b55; outline-offset: 3px; }
+[hidden] { display: none !important; }
+#charSheet .weaponDetail { overflow-wrap: anywhere; }
+#charSheet label { white-space: normal; }
+#charSheet > .w3-row-padding > .w3-col.l8 { width: min(1200px, 100%); float: none; margin: auto; }
+#charSheet > .w3-row-padding > .w3-col.l2 { display: none; }
+#charSheet .sheet-wrapper .w3-row-padding > .w3-half { padding: 0 12px; }
+#charSheet .sheet-wrapper .sheet-item { height: auto; min-height: 28px; overflow: visible; }
+#charSheet .sheet-wrapper .sheet-row { height: auto; min-height: 24px; }
+#charSheet .sheet-wrapper .sheet-quickborder > .w3-row { display: grid; grid-template-columns: minmax(130px, 42%) minmax(0, 1fr); gap: 3px 8px; padding: 6px 10px; }
+#charSheet .sheet-wrapper .sheet-quickborder > .w3-row::before,
+#charSheet .sheet-wrapper .sheet-quickborder > .w3-row::after { display: none; }
+#charSheet .sheet-wrapper .sheet-quickborder > .w3-row > div { width: auto; float: none; min-width: 0; }
+#charSheet .sheet-quickborder { margin-bottom: 12px; }
+#charSheet .w3-half:has(> #halfMove), #charSheet .w3-half:has(> #fullMove),
+#charSheet .w3-half:has(> #charge), #charSheet .w3-half:has(> #run) { width: 100%; display: flex; justify-content: space-between; gap: 10px; }
+#charSheet .sheet-row:has(#attr_GearCarryMax) { display: flex; flex-wrap: wrap; gap: 5px 8px; }
+#charSheet .sheet-row:has(#attr_GearCarryMax) > .sheet-item { width: auto !important; margin: 0; }
+#charSheet .sheet-row:has(#attr_GearCarryMax) > .sheet-item:empty { display: none; }
+#charSheet .sheet-item:has(#attr_baseCarry) { width: auto; }
+#charSheet .repeating_Gears > .underline:not(#defaultGear) { display: flex; gap: 8px; align-items: baseline; }
+#charSheet .repeating_Gears > .underline > .sheet-item:first-child { width: auto !important; flex: 1; }
+#charSheet .repeating_Gears > .underline > .sheet-item:last-child { width: auto !important; white-space: nowrap; }
+#charSheet #halfMove, #charSheet #fullMove, #charSheet #charge, #charSheet #run { white-space: nowrap; flex-shrink: 0; }
+#charSheet .w3-half:has(> #halfMove) > label, #charSheet .w3-half:has(> #fullMove) > label,
+#charSheet .w3-half:has(> #charge) > label, #charSheet .w3-half:has(> #run) > label { width: auto; }
+@media (max-width: 700px) {
+ .advance-grid, .talent-tier { grid-template-columns: 1fr; }
+ .advance-aptitudes { top: 29px; }
+ .add-skill { display: block; }
+ .add-skill label { display: block; margin-top: 8px; }
+ .extra-panel { margin: 12px; padding: 14px; }
+ .core-grid { grid-template-columns: 1fr; padding: 0 14px; }
+ .core-card > img { height: 200px; }
+ .w3-top .w3-bar-item { font-size: 12px; padding: 8px; }
+ #charRoll table, #equipSelect table { font-size: 13px; }
+ #charRoll input { min-width: 60px; }
+ #charSheet .w3-col.l2 { width: auto; padding-right: 6px; }
+ #charSheet .w3-rest { overflow: visible; }
+ #charSheet .sheet-wrapper .w3-row-padding > .w3-half { padding: 0 4px; }
+ #charSheet .sheet-characteristics > .w3-row-padding > .w3-half > .w3-row-padding { grid-template-columns: minmax(105px,1fr) minmax(185px,1.6fr); }
+ #charSheet .sheet-quickborder > .w3-row { font-size: 13px; }
+}
+@media print {
+ .w3-top, .app-footer, .w3-modal, button, .print-button { display: none !important; }
+ body { background: white; }
+ #charSheet { display: block !important; opacity: 1 !important; }
+ #charSheet .w3-col.l8 { width: 100%; }
+ #charSheet > .w3-row-padding > .w3-col.l2 { display: none; }
+ .core-grid { display: none; }
+ .sheet-quickborder { break-inside: avoid; }
+}
