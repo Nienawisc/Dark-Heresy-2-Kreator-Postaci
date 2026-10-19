@@ -316,6 +316,40 @@ const { pathToFileURL } = require('node:url');
         assert.equal(weapon.system.ammo.includes(ammo._id),true,'Broń ma przypisaną amunicję');
     }
     assert.equal(foundry.actor.items.filter(item=>item.type==='aptitude').length>=7, true, 'Predyspozycje trafiają do Foundry');
+    const apex=await page.evaluate(()=>createApexActorData(character));
+    assert.equal(apex.actor.type,'character','Apex otrzymuje właściwy typ aktora');
+    assert.equal(apex.actor.system.dh2e.xp.spent,1000-await page.evaluate(()=>character.Experience),'Apex zachowuje wydane PD');
+    assert.equal(apex.actor.system.characteristics.weaponSkill+5*(apex.actor.system.dh2e.characteristicAdvances.weaponSkill||0),Number(await page.locator('#attr_WS').inputValue()),'Apex nie nalicza rozwoju cechy podwójnie');
+    assert.equal(apex.actor.items.some(item=>item.type==='weapon'&&item.name==='Long Las'&&item.system.functions.weapon.enabled),true,'Apex otrzymuje broń z kompendium i automatyzacją');
+    assert.equal(apex.actor.items.some(item=>item.type==='cybernetic'&&item.name==='Bionic Arm'&&item.system.dh2e.gearKey==='bionic-arm'),true,'Apex otrzymuje cybernetykę z kompendium');
+    assert.equal(apex.actor.items.some(item=>item.type==='talent'&&item.name==='Quick Draw'&&item.system.dh2e.key==='quick-draw'),true,'Zdolność z wróżby używa angielskiego klucza Apex');
+    assert.equal(apex.warnings.length,0,`Przykładowa postać nie powinna mieć brakujących wpisów Apex: ${apex.warnings.join('; ')}`);
+    const apexCoverage=await page.evaluate(()=>({
+        gear:ADV_ARMORY.filter(entry=>!Object.values(APEX_CATALOG).some(item=>item.name===APEX_GEAR_NAMES[entry.name]&&['weapon','armour','forceField','gear','drug','cybernetic','ammunition','weaponModification'].includes(item.type))).map(entry=>entry.name),
+        talents:ADV_TALENTS.filter(entry=>!APEX_CATALOG['talent:'+apexTalentName(entry.name).name]).map(entry=>entry.name)
+    }));
+    assert.deepEqual(apexCoverage.gear,[],'Cała polska Zbrojownia ma odpowiedniki w kompendium Apex');
+    assert.deepEqual(apexCoverage.talents,[],'Wszystkie zdolności kreatora mają odpowiedniki w kompendium Apex');
+    const apexStarting=await page.evaluate(()=>{
+        const missing=[];
+        for(const id of CORE.backgrounds)for(const choice of backgrounds[id].equipment)for(const option of choice.split(' ZZ ')){
+            const warnings=[];
+            apexAddGear([],option,warnings,new Map());
+            missing.push(...warnings.map(text=>`${id}: ${text}`));
+        }
+        return missing;
+    });
+    assert.deepEqual(apexStarting,[],'Wszystkie warianty wyposażenia początkowego mają odpowiedniki w Apex');
+    const apexStartingTalents=await page.evaluate(()=>{
+        const missing=[];
+        for(const [group,ids] of Object.entries(CORE))for(const id of ids)for(const choice of (window[group][id].talents||[]))for(const option of choice.split(' ZZ ')){
+            if(/\((Pick One|Choose Group)\)/.test(option))continue;
+            const warnings=[];apexAddTalent([],option,warnings);
+            missing.push(...warnings.map(text=>`${id}: ${text}`));
+        }
+        return missing;
+    });
+    assert.deepEqual(apexStartingTalents,[],'Wszystkie zdolności startowe mają wpisy w Apex');
     await page.getByRole('button', { name: 'Eksport / zapis' }).click();
     await page.screenshot({ path: 'test-results/foundry-modal.png' });
     const [foundryDownload]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Pobierz JSON do Foundry'}).click()]);
@@ -323,9 +357,15 @@ const { pathToFileURL } = require('node:url');
     const downloadedActor=JSON.parse(decodeURIComponent(foundryDownload.url().split(',')[1]));
     assert.equal(downloadedActor.type,'acolyte','Pobrany plik jest aktorem Foundry, nie wewnętrznym kodem kreatora');
     assert.equal(downloadedActor.items.some(item=>item.type==='cybernetic'),true,'Pobrany JSON zawiera ekwipunek');
+    const [apexDownload]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Pobierz JSON do Apex RPG'}).click()]);
+    assert.match(apexDownload.suggestedFilename(),/-apex\.json$/,'Apex dostaje osobny plik JSON');
+    const downloadedApex=JSON.parse(decodeURIComponent(apexDownload.url().split(',')[1]));
+    assert.equal(downloadedApex.type,'character','Pobrany plik jest aktorem Apex');
     await page.getByRole('button',{name:'Zamknij'}).last().click();
-    const [directDownload]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Pobierz do Foundry'}).click()]);
+    const [directDownload]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Pobierz do Vendare'}).click()]);
     assert.match(directDownload.suggestedFilename(),/-vendare\.json$/,'Karta postaci ma bezpośredni przycisk pobierania');
+    const [directApex]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Pobierz do Apex RPG'}).click()]);
+    assert.match(directApex.suggestedFilename(),/-apex\.json$/,'Karta postaci ma bezpośredni eksport Apex');
     await assertSheetLayout(390);
     await assertSheetLayout(1440);
     assert.equal(await page.evaluate(() => decodeCharacter(encodeCharacter(character)).Experience), 700);
@@ -385,6 +425,10 @@ const { pathToFileURL } = require('node:url');
         check(vendarePsyker.system.psy.rating===1&&vendarePsyker.system.psy.class==='bound'&&vendarePsyker.system.bio.elite==='Psionik','Psionik jest odwzorowany w Vendare');
         check(vendarePsyker.system.skills.linguistics.specialities.highGothic.advance===0,'Polska specjalizacja umiejętności trafia do Vendare');
         check(vendarePsyker.items.some(item=>item.type==='aptitude'&&item.name==='Psionika'),'Predyspozycja Psionika trafia do Vendare po polsku');
+        const apexPsyker=createApexActorData(character).actor;
+        check(apexPsyker.system.dh2e.psyRating===2&&apexPsyker.system.dh2e.psykerClass==='bound','Sankcjonowany Psionik ma zgodny z Apex Współczynnik 2');
+        check(apexPsyker.system.dh2e.traits.some(item=>item.key==='sanctioned'),'Sankcjonowany Psionik ma właściwą cechę w Apex');
+        check(apexPsyker.system.skills.linguisticsHighGothic.rank===1,'Apex otrzymuje angielski klucz specjalizacji');
         character.background='outcast';character.Advances.corruption=7;renderAdvancementSheet();
         check(el('eliteStartingBonuses').textContent.includes('Punkty Spaczenia: 7')&&el('eliteStartingBonuses').textContent.includes('bez sankcji'),'Psionik-Renegat ma startowe Punkty Spaczenia');
         fresh();character.Advances.stats.WS=5;check(advanceBalance()<0&&advanceValid(),'Przekroczenie 1000 PD blokowane');
