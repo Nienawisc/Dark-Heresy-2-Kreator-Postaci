@@ -593,6 +593,7 @@
                             <div class="w3-quarter w3-center">
                                 <div style="padding-top: 25px;">
                                         <button class="w3-button w3-round w3-yellow" onclick="document.getElementById('saveModal').style.display='block'"> Eksport / zapis </button>
+                                        <button type="button" class="w3-button w3-round w3-green" style="margin-top: 8px" onclick="downloadVendareActor()"> Pobierz do Foundry </button>
                             </div>
                             </div>
                         </div>
@@ -1121,6 +1122,10 @@
   <p id="saveStatus" role="status"></p><hr>
   <label for="exportText">Kod postaci</label><textarea id="exportText" class="w3-input w3-border w3-round" rows="4" readonly></textarea>
   <button class="w3-button w3-green w3-round" onclick="exportChar()">Wygeneruj kod</button>
+  <hr><h3>Foundry VTT — Dark Heresy 2E (Vendare)</h3>
+  <p>Pobierz kartę Akolity jako plik JSON. W Foundry utwórz aktora typu „Acolyte”, kliknij go prawym przyciskiem i wybierz „Import Data”. Import zastąpi dane wybranego aktora.</p>
+  <button type="button" class="w3-button w3-green w3-round" onclick="downloadVendareActor()">Pobierz JSON do Foundry</button>
+  <p id="foundryExportStatus" role="status"></p>
  </div>
 </div>
 <footer class="w3-center app-footer">Polska adaptacja: Ten Zły · Na podstawie <a href="https://github.com/ajott/ajott.github.io/tree/master/dh2chargen" target="_blank" rel="noopener noreferrer">kreatora ajott</a></footer>
@@ -1129,4 +1134,5 @@
 
 <script src="./advancement-data.js"></script><script src="./advancement.js?v=20260925-2"></script>
 <script src="./saveChars.js"></script>
+<script src="./foundry-export.js"></script>
 </html>
