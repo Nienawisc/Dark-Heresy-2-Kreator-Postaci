@@ -21,7 +21,6 @@ const VEND_AVAILABILITY = {
   'Średnio Dostępne':'average',Niezwykłe:'scarce',Rzadkie:'rare',Niespotykane:'very-rare',
   Wyjątkowe:'extremely-rare','Niemal Unikalne':'near-unique',Unikalne:'unique'
 };
-const VEND_APTITUDE = {Offense:'Offence',Defense:'Defence'};
 const VEND_SPECIALITIES = {
   commonLore:'adeptaSororitas adeptusArbites adeptusAstartes adeptusAstraTelepathica adeptusMechanicus administratum askellonSector chartistCaptains collegiaTitanicu ecclesiarchy imperialCreed imperialGuard imperialNavy imperium navigators planetaryDefenceForces rogueTraders scholaProgenium tech underworld war',
   forbiddenLore:'archaeotech chaosSpaceMarines criminalCartelsAndSmugglers daemonology heresy theHorusHeresyAndTheLongWar inquisition mutants officioAssassinorum pirates psykers theWarp xenos',
@@ -36,7 +35,7 @@ const VEND_COMPOSITE_GEAR = {
 };
 
 function vendText(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
-function vendAptitude(name){return VEND_APTITUDE[name]||name;}
+function vendAptitude(name){return plText(({Offence:'Offense',Defence:'Defense'})[name]||name);}
 function vendId(){
   const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const bytes=crypto.getRandomValues(new Uint8Array(16));
@@ -148,7 +147,7 @@ function createVendareActorData(value){
     for(const [stat,key] of Object.entries(VEND_STAT_KEYS)){
       const rank=state.stats[stat]||0,recorded=state.statCosts[stat];
       const cost=Array.isArray(recorded)&&recorded.length===rank?recorded.reduce((sum,n)=>sum+n,0):Array.from({length:rank},(_,i)=>advStatPrice(stat,i+1)).reduce((sum,n)=>sum+n,0);
-      characteristics[key]={base:checked[stat]+(advDivinationBenefit().stat===stat?2:0),advance:rank*5,cost,unnatural:0};
+      characteristics[key]={base:checked[stat]+(advDivinationBenefit().stat===stat?2:0),advance:rank*5,cost,unnatural:0,aptitudes:(ADV_STAT_APTS[stat]||[]).map(vendAptitude)};
       spentCharacteristics+=cost;
     }
     for(const name of new Set([...advKnownSkills(),...(state.elite==='inquisitor'&&state.inquisitorLore?[`Forbidden Lore (${state.inquisitorLore})`]:[])])){
@@ -167,6 +166,7 @@ function createVendareActorData(value){
         skills[key]=skill;
       }else skills[key]={advance:(rank-1)*10,starter:base>0,cost};
     }
+    for(const [root,key] of Object.entries(VEND_SKILL_KEYS))(skills[key]||={}).aptitudes=ADV_SKILL_APTS[root].map(vendAptitude);
     for(const aptitude of new Set(advAptitudes().map(vendAptitude)))items.push({name:aptitude,type:'aptitude',system:{description:'',source:'Kreator postaci'}});
     const addTalent=(name,starter,cost,custom)=>{items.push(vendTalentItem(name,starter,cost,custom));spentTalents+=cost;};
     character.Talents.forEach(name=>addTalent(plText(name),true,0));

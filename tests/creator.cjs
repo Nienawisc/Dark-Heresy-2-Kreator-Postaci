@@ -286,11 +286,23 @@ const { pathToFileURL } = require('node:url');
     assert.equal(foundry.actor.type, 'acolyte', 'Eksport korzysta z typu aktora Vendare');
     assert.equal(foundry.actor.system.experience.value, 1000, 'Foundry dostaje całe początkowe PD');
     const foundrySpent=Object.values(foundry.actor.system.characteristics).reduce((sum,entry)=>sum+entry.cost,0)
-        +Object.values(foundry.actor.system.skills).reduce((sum,entry)=>sum+(entry.specialities?Object.values(entry.specialities).reduce((inner,speciality)=>inner+speciality.cost,0):entry.cost),0)
+        +Object.values(foundry.actor.system.skills).reduce((sum,entry)=>sum+(entry.specialities?Object.values(entry.specialities).reduce((inner,speciality)=>inner+speciality.cost,0):(entry.cost||0)),0)
         +foundry.actor.items.filter(item=>item.type==='talent').reduce((sum,item)=>sum+item.system.cost,0)
         +foundry.actor.system.psy.cost+foundry.actor.system.experience.spentOther;
     assert.equal(foundrySpent,1000-await page.evaluate(()=>character.Experience),'Koszty PD po imporcie odpowiadają kreatorowi');
     assert.equal(foundry.actor.system.characteristics.weaponSkill.base+foundry.actor.system.characteristics.weaponSkill.advance, Number(await page.locator('#attr_WS').inputValue()), 'Rozwój cechy trafia do pól Vendare');
+    const polishAptitudes=new Set(await page.evaluate(()=>ADV_ALL_APTITUDES.map(plText)));
+    assert.equal(foundry.actor.items.filter(item=>item.type==='aptitude').every(item=>polishAptitudes.has(item.name)),true,'Predyspozycje na karcie Foundry mają polskie nazwy');
+    assert.equal(Object.values(foundry.actor.system.characteristics).every(entry=>entry.aptitudes.every(name=>polishAptitudes.has(name))),true,'Predyspozycje cech w Foundry mają polskie nazwy');
+    assert.equal(Object.values(foundry.actor.system.skills).every(entry=>entry.aptitudes.every(name=>polishAptitudes.has(name))),true,'Predyspozycje wszystkich umiejętności w Foundry mają polskie nazwy');
+    assert.equal(await page.evaluate(()=>vendTalentItem('Krzepkość',false,100).system.aptitudes),'Wytrzymałość, Ogólna','Predyspozycje zdolności w Foundry mają polskie nazwy');
+    const expectedMatches=await page.evaluate(()=>({
+        characteristics:Object.fromEntries(Object.entries(VEND_STAT_KEYS).map(([stat,key])=>[key,advMatches(ADV_STAT_APTS[stat]||[])])),
+        skills:Object.fromEntries(Object.entries(VEND_SKILL_KEYS).map(([root,key])=>[key,advMatches(ADV_SKILL_APTS[root])]))
+    }));
+    const heldAptitudes=new Set(foundry.actor.items.filter(item=>item.type==='aptitude').map(item=>item.name));
+    for(const [key,count] of Object.entries(expectedMatches.characteristics))assert.equal(foundry.actor.system.characteristics[key].aptitudes.filter(name=>heldAptitudes.has(name)).length,count,`Polskie predyspozycje cechy ${key} zachowują liczbę dopasowań`);
+    for(const [key,count] of Object.entries(expectedMatches.skills))assert.equal(foundry.actor.system.skills[key].aptitudes.filter(name=>heldAptitudes.has(name)).length,count,`Polskie predyspozycje umiejętności ${key} zachowują liczbę dopasowań`);
     assert.equal(foundry.actor.items.some(item=>item.name==='Szybkie dobycie'&&item.type==='talent'&&item.system.starter), true, 'Wróżba trafia do przedmiotów Foundry');
     assert.equal(foundry.actor.items.some(item=>item.name==='Bioniczna ręka'&&item.type==='cybernetic'), true, 'Cybernetyka trafia do Foundry');
     assert.equal(foundry.actor.items.some(item=>item.name==='Laserowy karabin snajperski'&&item.type==='weapon'&&item.system.range===150), true, 'Broń zachowuje dostępne parametry');
@@ -372,7 +384,7 @@ const { pathToFileURL } = require('node:url');
         const vendarePsyker=createVendareActorData(character).actor;
         check(vendarePsyker.system.psy.rating===1&&vendarePsyker.system.psy.class==='bound'&&vendarePsyker.system.bio.elite==='Psionik','Psionik jest odwzorowany w Vendare');
         check(vendarePsyker.system.skills.linguistics.specialities.highGothic.advance===0,'Polska specjalizacja umiejętności trafia do Vendare');
-        check(vendarePsyker.items.some(item=>item.type==='aptitude'&&item.name==='Psyker'),'Predyspozycja Psionika trafia do Vendare');
+        check(vendarePsyker.items.some(item=>item.type==='aptitude'&&item.name==='Psionika'),'Predyspozycja Psionika trafia do Vendare po polsku');
         character.background='outcast';character.Advances.corruption=7;renderAdvancementSheet();
         check(el('eliteStartingBonuses').textContent.includes('Punkty Spaczenia: 7')&&el('eliteStartingBonuses').textContent.includes('bez sankcji'),'Psionik-Renegat ma startowe Punkty Spaczenia');
         fresh();character.Advances.stats.WS=5;check(advanceBalance()<0&&advanceValid(),'Przekroczenie 1000 PD blokowane');
